@@ -4,7 +4,11 @@
 
 Rep <https://github.com/coleam00/local-ai-packaged.git>
 
-## Docker refernce documentation
+## Dave Ebbelaar
+
+<https://github.com/daveebbelaar>
+
+## Docker reference documentation
 
 <https://docs.docker.com/reference>
 
@@ -16,6 +20,11 @@ Rep <https://github.com/coleam00/local-ai-packaged.git>
 
 <https://github.com/pgvector/pgvector>
 pip install pgvector
+
+## PGVectorScale
+
+<https://github.com/timescale/pgvectorscale>
+<https://github.com/daveebbelaar/pgvectorscale-rag-solution>
 
 ## PGai
 
@@ -31,3 +40,7 @@ pgai.install(DB_URL)
 
 -- Quickstart main.py
 <https://github.com/timescale/pgai/blob/main/examples/quickstart/main.py>
+
+## Crawl4AI
+
+<https://docs.crawl4ai.com/>

@@ -1,4 +1,5 @@
 
+# Common N8N configuration
 x-n8n: &service-n8n
   image: n8nio/n8n:latest
   environment:
@@ -13,6 +14,7 @@ x-n8n: &service-n8n
     # - N8N_USER_MANAGEMENT_JWT_SECRET
     - WEBHOOK_URL=${N8N_HOSTNAME:+https://}${N8N_HOSTNAME:-http://localhost:5678}
 
+### Services setup ###
 services:
   crawl4ai:
     container_name: crawl4ai
@@ -43,10 +45,21 @@ services:
     depends_on:
       n8n-import:
         condition: service_completed_successfully
+      db_vec:
+        condition: service_healthy
 
+  adminer:
+    container_name: adminer
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+
+  # PostgreSQL with pgvector extension for vector storage
   db_vec:
     container_name: db
-    image: pgvector/pgvector:pg18-trixie
+    # image: timescale/timescaledb-ha:pg18
+    image: timescale/timescaledb:latest-pg18
     restart: unless-stopped
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
@@ -62,10 +75,13 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: postgres
+    volumes:
+      - timescaledb_data:/var/lib/postgresql/data
 
 
 volumes:
   n8n_storage:
+  timescaledb_data:
 
 networks:
   default:
