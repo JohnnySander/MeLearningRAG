@@ -1,12 +1,6 @@
 
 
 services:
-  adminer:
-    image: adminer
-    restart: always
-    ports:
-      - 8080:8080
-
   db_pg:
     container_name: pg_db
     # image: postgres:18
