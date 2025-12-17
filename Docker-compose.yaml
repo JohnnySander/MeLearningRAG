@@ -16,37 +16,37 @@ x-n8n: &service-n8n
 
 ### Services setup ###
 services:
-  crawl4ai:
-    container_name: crawl4ai
-    image: unclecode/crawl4ai:latest
-    ports:
-      - 11235:11235
+  # crawl4ai:
+  #   container_name: crawl4ai
+  #   image: unclecode/crawl4ai:latest
+  #   ports:
+  #     - 11235:11235
 
-  n8n-import:
-    <<: *service-n8n
-    container_name: n8n-import
-    entrypoint: /bin/sh
-    command:
-      - "-c"
-      - "n8n import:credentials --separate --input=/backup/credentials && n8n import:workflow --separate --input=/backup/workflows"
-    volumes:
-      - ./source/n8n/backup:/backup
+  # n8n-import:
+  #   <<: *service-n8n
+  #   container_name: n8n-import
+  #   entrypoint: /bin/sh
+  #   command:
+  #     - "-c"
+  #     - "n8n import:credentials --separate --input=/backup/credentials && n8n import:workflow --separate --input=/backup/workflows"
+  #   volumes:
+  #     - ./source/n8n/backup:/backup
 
-  n8n:
-    <<: *service-n8n
-    container_name: n8n
-    restart: unless-stopped
-    ports:
-      - 5678:5678
-    volumes:
-      - n8n_storage:/home/node/.n8n
-      - ./source/n8n/backup:/backup
-      - ./shared:/data/shared
-    depends_on:
-      n8n-import:
-        condition: service_completed_successfully
-      db_vec:
-        condition: service_healthy
+  # n8n:
+  #   <<: *service-n8n
+  #   container_name: n8n
+  #   restart: unless-stopped
+  #   ports:
+  #     - 5678:5678
+  #   volumes:
+  #     - ./n8n_storage:/home/node/.n8n
+  #     - ./source/n8n/backup:/backup
+  #     - ./shared:/data/shared
+  #   depends_on:
+  #     n8n-import:
+  #       condition: service_completed_successfully
+  #     db_vec:
+  #       condition: service_healthy
 
   adminer:
     container_name: adminer
@@ -58,13 +58,14 @@ services:
   # PostgreSQL with pgvector extension for vector storage
   db_vec:
     container_name: db
-    # image: timescale/timescaledb-ha:pg18
-    image: timescale/timescaledb:latest-pg18
+    build:
+      context: ./source/db_pgvector
+      dockerfile: Dockerfile
     restart: unless-stopped
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
-      interval: 3s
-      timeout: 3s
+      interval: 30s
+      timeout: 8s
       retries: 4
     ports:
       - 5432:5432
@@ -76,12 +77,14 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: postgres
     volumes:
-      - timescaledb_data:/var/lib/postgresql/data
+      # As of ver 18 no trailing data folder in /postgresql
+      # https://github.com/docker-library/postgres/pull/1259
+      - vector_data:/var/lib/postgresql
+      - ./backup/pgvector:/var/backups
 
 
 volumes:
-  n8n_storage:
-  timescaledb_data:
+  vector_data:
 
 networks:
   default:
