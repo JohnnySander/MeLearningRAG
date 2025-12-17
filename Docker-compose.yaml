@@ -31,6 +31,9 @@ services:
   #     - "n8n import:credentials --separate --input=/backup/credentials && n8n import:workflow --separate --input=/backup/workflows"
   #   volumes:
   #     - ./source/n8n/backup:/backup
+  #   depends_on:
+  #     db_vec:
+  #       condition: service_healthy
 
   # n8n:
   #   <<: *service-n8n
@@ -77,14 +80,14 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: postgres
     volumes:
-      # As of ver 18 no trailing data folder in /postgresql
+      # As of Postgres ver 18 no trailing data folder in /postgresql
       # https://github.com/docker-library/postgres/pull/1259
-      - vector_data:/var/lib/postgresql
+      - data:/var/lib/postgresql
       - ./backup/pgvector:/var/backups
 
 
 volumes:
-  vector_data:
+  data:
 
 networks:
   default:
