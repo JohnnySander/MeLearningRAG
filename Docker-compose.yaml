@@ -89,6 +89,12 @@ services:
       - ./backup/pgvector:/var/backups
 
 
+models:
+  reasoning:
+    model: ai\smollm3
+  embedding:
+    model: ai\nomic-embed-text-v1.5
+
 volumes:
   data:
 
