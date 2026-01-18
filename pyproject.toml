@@ -3,5 +3,11 @@ name = "melearningrag"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
-requires-python = ">=3.14"
-dependencies = []
+requires-python = ">=3.13"
+dependencies = [
+    "crawl4ai>=0.7.8",
+    "openai>=2.14.0",
+    "psycopg2>=2.9.11",
+    "pydantic-ai>=1.39.0",
+    "streamlit>=1.52.2",
+]
