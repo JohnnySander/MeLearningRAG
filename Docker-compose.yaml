@@ -21,6 +21,9 @@ services:
   #   image: unclecode/crawl4ai:latest
   #   ports:
   #     - 11235:11235
+  #   restart: unless-stopped
+  #   env_file:
+  #     - .env
 
   # n8n-import:
   #   <<: *service-n8n
@@ -46,8 +49,8 @@ services:
   #     - ./source/n8n/backup:/backup
   #     - ./shared:/data/shared
   #   depends_on:
-  #     n8n-import:
-  #       condition: service_completed_successfully
+  #     # n8n-import:
+  #     #   condition: service_completed_successfully
   #     db_vec:
   #       condition: service_healthy
 

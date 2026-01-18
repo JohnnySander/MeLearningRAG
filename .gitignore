@@ -13,6 +13,8 @@ wheels/
 .env
 
 # docker generated files
-./backup/
-pgai
+backup
 shared
+n8n_storage
+loggs
+res_folder
